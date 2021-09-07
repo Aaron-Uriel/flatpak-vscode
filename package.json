@@ -146,6 +146,22 @@
         "linux": "ctrl+alt+R"
       }
     ],
+    "taskDefinitions": [
+      {
+        "type": "flatpak",
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+        },
+          "command": {
+            "type": "string"
+          }
+        }
+      }
+    ],
     "jsonValidation": [
       {
         "fileMatch": [

@@ -3,6 +3,8 @@ import { window, ExtensionContext, commands } from 'vscode'
 import { exists, findManifests } from './utils'
 import { promises as fs } from 'fs'
 import { FlatpakTaskTerminal, TaskMode } from './terminal'
+import { FlatpakBuildTasksProvider } from './flatpak_build_tasks'
+import * as vscode from 'vscode'
 const { executeCommand, registerCommand } = commands
 const { showInformationMessage } = window
 
@@ -23,6 +25,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
     // Mark the app as already initialized
     store.manifestSelected(manifest)
+
+    const workspaceRoot = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
+      ? vscode.workspace.workspaceFolders[0].uri.fsPath : undefined;
+
+    if (workspaceRoot) {
+      vscode.tasks.registerTaskProvider(FlatpakBuildTasksProvider.taskProviderType, new FlatpakBuildTasksProvider())
+    }
 
     const outputChannel = window.createOutputChannel('Flatpak')
     // Create a Flatpak pty
